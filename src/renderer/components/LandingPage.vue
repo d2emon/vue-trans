@@ -2,39 +2,101 @@
   <div id="wrapper">
     <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
     <main>
-      <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
-      </div>
-
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="alt" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-        </div>
-      </div>
+      <b-row>
+        <b-col md="6">
+          <b-row>
+            <b-col>
+              <b-form @submit="formSubmit">
+                <b-form-group label-for="field1">
+                  <b-form-input id="field1" type="text" v-model="text1" plaintext></b-form-input>
+                  <input class="form-control-plaintext" value="Plain Text Value" readonly type="text"></input>
+                </b-form-group>  
+                <b-form-group label-for="field2">
+                  <b-form-input id="field2" type="text" v-model="text2"></b-form-input>
+                </b-form-group>  
+                <b-form-group label-for="field3">
+                  <b-form-textarea id="field3" v-model="text3" :rows="5"></b-form-textarea>
+                </b-form-group>  
+              </b-form>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-nav vertical>
+                <b-nav-item>First</b-nav-item>
+                <b-nav-item>Second</b-nav-item>
+                <b-nav-item>Third</b-nav-item>
+              </b-nav>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-button-toolbar>
+                <b-button-group>
+                  <b-btn>First</b-btn>
+                  <b-btn>Second</b-btn>
+                  <b-btn>Third</b-btn>
+                </b-button-group> 
+              </b-button-toolbar>
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col md="6">
+          <b-row>
+            <b-col md="6">
+              <b-nav vertical>
+                <b-nav-item>First</b-nav-item>
+                <b-nav-item>Second</b-nav-item>
+                <b-nav-item>Third</b-nav-item>
+              </b-nav>
+            </b-col>
+            <b-col md="6">
+              <b-nav vertical>
+                <b-nav-item>First</b-nav-item>
+                <b-nav-item>Second</b-nav-item>
+                <b-nav-item>Third</b-nav-item>
+              </b-nav>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-nav vertical>
+              <b-nav-item>First</b-nav-item>
+              <b-nav-item>Second</b-nav-item>
+              <b-nav-item>Third</b-nav-item>
+            </b-nav>
+          </b-row>
+          <b-row>
+            <b-button-toolbar>
+              <b-button-group>
+                <b-btn>First</b-btn>
+                <b-btn>Second</b-btn>
+                <b-btn>Third</b-btn>
+              </b-button-group> 
+            </b-button-toolbar>
+          </b-row>
+          <b-row>
+            <b-button-toolbar>
+              <b-btn>First</b-btn>
+            </b-button-toolbar>
+          </b-row>
+          <b-row>
+            <b-button-toolbar>
+              <b-button-group>
+                <b-btn>First</b-btn>
+                <b-btn>Second</b-btn>
+                <b-btn>Third</b-btn>
+              </b-button-group> 
+            </b-button-toolbar>
+          </b-row>
+        </b-col>
+      </b-row>
     </main>
   </div>
 </template>
 
 <script>
-  import SystemInformation from './LandingPage/SystemInformation'
-
   export default {
     name: 'landing-page',
-    components: { SystemInformation },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
@@ -44,15 +106,6 @@
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body { font-family: 'Source Sans Pro', sans-serif; }
 
   #wrapper {
     background:
@@ -66,63 +119,16 @@
     width: 100vw;
   }
 
-  #logo {
-    height: auto;
-    margin-bottom: 20px;
-    width: 420px;
-  }
+#logo {
+  height: auto;
+  margin-bottom: 20px;
+  width: 420px;
+}
 
-  main {
-    display: flex;
-    justify-content: space-between;
-  }
+main {
+  /* display: flex; */
+  /* justify-content: space-between; */
+}
 
-  main > div { flex-basis: 50%; }
-
-  .left-side {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .welcome {
-    color: #555;
-    font-size: 23px;
-    margin-bottom: 10px;
-  }
-
-  .title {
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-  }
-
-  .title.alt {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .doc p {
-    color: black;
-    margin-bottom: 10px;
-  }
-
-  .doc button {
-    font-size: .8em;
-    cursor: pointer;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
-    display: inline-block;
-    color: #fff;
-    background-color: #4fc08d;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid #4fc08d;
-  }
-
-  .doc button.alt {
-    color: #42b983;
-    background-color: transparent;
-  }
+/* main > div { flex-basis: 50%; } */
 </style>
