@@ -24,4 +24,10 @@ export default {
 }
 
 /* body { font-family: 'Source Sans Pro', sans-serif; } */
+
+#logo {
+  height: auto;
+  margin-bottom: 20px;
+  width: 420px;
+}
 </style>

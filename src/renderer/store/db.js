@@ -39,6 +39,19 @@ var Transport = new Schema({
   locations: [Location]
 })
 
+Location.methods.getLinks = function (cb) {
+  return mongoose.model('Link').find({ $or: [
+    { 'fromLocation._id': this.id },
+    { 'toLocation._id': this.id }
+  ]}, cb)
+}
+
+Link.methods.fromHere = function (location) {
+  if (!location) { return false }
+  if (!this.fromLocation) { return false }
+  return (location.id === this.fromLocation.id)
+}
+
 /*
   object dsLocations: TDataSource
     DataSet = tbLocations
