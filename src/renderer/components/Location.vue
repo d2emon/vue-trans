@@ -9,28 +9,19 @@
             <b-btn :disabled="locationId <= 0" @click="selectLocation(0)">&laquo;</b-btn>
             <b-btn :disabled="locationId <= 0" @click="selectLocation(locationId - 1)">&lsaquo;</b-btn>
           </b-button-group>
-          <b-dropdown class="mx-1" :text="location.title">
-            <b-dropdown-item v-for="(l, index) in locations" @click="selectLocation(index)">{{ l.title }}</b-dropdown-item>
-          </b-dropdown>
           <b-button-group class="mx-1">
-            <b-btn @click="addLocation">Add</b-btn>
+            <b-btn @click="addLocation" title="Add location"><i class="fa fa-sm fa-plus"></i></b-btn>
           </b-button-group>
           <b-button-group class="mx-1">
             <b-btn :disabled="locationId >= locations.length - 1" @click="selectLocation(locationId + 1)">&rsaquo;</b-btn>
             <b-btn :disabled="locationId >= locations.length - 1" @click="selectLocation(locations.length - 1)">&raquo;</b-btn>
           </b-button-group>
+          <b-dropdown class="mx-1" :text="location.title">
+            <b-dropdown-item v-for="(l, index) in locations" @click="selectLocation(index)">{{ l.title }}</b-dropdown-item>
+          </b-dropdown>
         </b-button-toolbar>
         </div>
         <b-form @submit="formSubmit">
-          <b-form-group label-for="locationIndex">
-            <b-form-input id="loocationIndex" type="text" :value="locationId + ' of ' + locations.length" plaintext></b-form-input>
-          </b-form-group>  
-          <b-form-group label-for="location">
-            <b-form-input id="location" type="text" :value="location" plaintext></b-form-input>
-          </b-form-group>  
-          <b-form-group label-for="field1">
-            <b-form-input id="field1" type="text" v-model="location.id" plaintext></b-form-input>
-          </b-form-group>  
           <b-form-group label-for="field2">
             <b-form-input id="field2" type="text" v-model="location.title"></b-form-input>
           </b-form-group>  
@@ -59,20 +50,23 @@ export default {
   components: {
     LinkList
   },
+  props: ['value'],
   computed: {
     locationId () {
       return this.locations.indexOf(this.location)
     }
   },
   data () {
+    var location = this.value
+    if (!location) {
+      location = new Db.LocationModel()
+    }
     return {
       selected: null,
 
-      location: new Db.LocationModel(),
+      location: location,
       locations: [],
 
-      editingLink: false,
-      linkData: { fromLocation: null, toLocation: null },
       link: null,
       links: []
     }
@@ -105,6 +99,8 @@ export default {
 
         doc.links = models
       })
+
+      this.$emit('select', location)
     },
     selectLocation (id) {
       this.loadLocation(this.locations[id])
@@ -115,12 +111,6 @@ export default {
       } else {
         this.loadLocation(link.fromLocation)
       }
-    },
-    goTransport () {
-      alert('dmData.tbLocations.FindKey([dmData.tbTransportLinksLocationId.Value]);')
-    },
-    selectTransport () {
-      alert('dmData.tbTransport.FindKey([dmData.tbTransportHereTransportId.Value]);')
     },
     addLocation () {
       this.location = new Db.LocationModel()
@@ -215,6 +205,11 @@ export default {
           doc.loadLocation(models[0])
         }
       })
+    }
+  },
+  watch: {
+    value: function (val) {
+      this.loadLocation(val)
     }
   },
   created () {

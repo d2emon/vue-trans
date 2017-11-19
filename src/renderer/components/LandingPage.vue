@@ -3,10 +3,10 @@
     <main>
       <b-row>
         <b-col md="6">
-          <location></location> 
+          <location :value="location" v-on:select="locationSelect"></location> 
         </b-col>
         <b-col md="6">
-          <transport></transport>
+          <transport :location="location" v-on:go="locationSelect"></transport>
         </b-col>
       </b-row>
     </main>
@@ -25,11 +25,15 @@ export default {
   },
   data () {
     return {
+      location: null
     }
   },
   methods: {
     open (link) {
       this.$electron.shell.openExternal(link)
+    },
+    locationSelect (location) {
+      this.location = location
     }
   }
 }

@@ -31,7 +31,10 @@
           <span v-if="fromHere(link)">{{ link.toLocation.title }}</span>
           <span v-else>From: {{ link.fromLocation.title }}</span>
         </a>
-        <b-btn @click="editLink(link.id)">Edit link</b-btn>
+        <sup>
+          <a @click="editLink(link.id)" title="Edit link"><i class="fa fa-sm fa-edit"></i></a>
+          <a @click="editLink(link.id)" title="Delete link"><i class="fa fa-sm fa-trash"></i></a>
+        </sup>
       </b-nav-item>
     </b-nav>
   </div>

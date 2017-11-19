@@ -12,7 +12,7 @@ function connect () {
     alert('connection error:' + err.message)
   })
   db.once('open', function callback () {
-    alert('Connected to DB!')
+    // alert('Connected to DB!')
   })
   return db
 }

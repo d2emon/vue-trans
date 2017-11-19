@@ -1,35 +1,14 @@
 <template>
   <div>
-    <b-modal id="transportEditor" title="Editing transport" v-model="editingTransport" @ok="transportSubmit">
-      <b-form>
-        <b-form-group label-for="transportTitle" v-if="transport">
-          <b-form-input id="transportTitle" type="text" v-model="transport.title"></b-form-input>
-        </b-form-group>  
-      </b-form>
-    </b-modal>
-    <b-button-toolbar>
-      <b-button-group class="mx-1">
-        <b-btn @click="editTransport(null)">Add</b-btn>
-      </b-button-group> 
-    </b-button-toolbar>
-    <b-row>
-      <b-col md="6">
-        <b-nav vertical pills>
-          <b-nav-item v-for="trans in transportHere" :active="transport.id === trans.id">
-            <a @click="selectTransport(trans)">{{ trans.title }}</a>
-            <b-btn @click="editTransport(trans.id)">Edit</b-btn>
-          </b-nav-item>
-        </b-nav>
-      </b-col>
-      <b-col md="6">
-        <b-nav vertical pills>
-          <b-nav-item v-for="trans in transports" :active="transport.id === trans.id">
-            <a @click="selectTransport(trans)">{{ trans.weight }}: {{ trans.title }}</a>
-            <b-btn @click="editTransport(trans.id)">Edit</b-btn>
-          </b-nav-item>
-        </b-nav>
-      </b-col>
-    </b-row>
+    <b-nav vertical pills v-if="transports.length > 0">
+      <b-nav-item v-for="trans in transports" :active="transport === trans">
+        <a @click="selectTransport(trans)">{{ trans.title }}</a>
+        <sup>
+          <a @click="editTransport(trans.id)" title="Edit transport"><i class="fa fa-sm fa-edit"></i></a>
+          <a @click="deleteTransport(trans.id)" title="Delete transport"><i class="fa fa-sm fa-trash"></i></a>
+        </sup>
+      </b-nav-item>
+    </b-nav>
   </div>
 </template>
 
@@ -39,18 +18,14 @@ var Db = require('../store/db.js')
 
 export default {
   name: 'transport-list',
+  props: ['transport', 'transports'],
   data () {
     return {
-      editingTransport: false,
-
-      transport: new Db.TransportModel(),
-      transports: [],
-      transportHere: []
     }
   },
   methods: {
     selectTransport (trans) {
-      this.transport = trans
+      // this.transport = trans
       // console.log(this.transport)
       // alert('dmData.tbTransport.FindKey([dmData.tbTransportHereTransportId.Value]);')
       this.$emit('select', trans)
@@ -71,58 +46,12 @@ export default {
         doc.loadTransport(model)
       })
     },
-    loadTransport (transport) {
-      this.transport = transport
-      this.editingTransport = true
+    deleteTransport (id) {
+      this.$emit('delete', id)
     },
-    transportSubmit () {
-      console.log(this.transport)
-      var doc = this
-      this.transport.save(function (err) {
-        if (err) {
-          alert(err)
-          return
-        }
-
-        doc.fetchData()
-      })
-    },
-    fetchData () {
-      var doc = this
-      Db.TransportModel.find({}, function (err, models) {
-        if (err) {
-          alert(err)
-          return
-        }
-
-        doc.transports = models
-        /*
-        if (models.length <= 0) {
-          doc.loadLocation(new Db.LocationModel())
-        } else {
-          doc.loadLocation(models[0])
-        }
-        */
-      })
-      Db.TransportModel.find({}, function (err, models) {
-        if (err) {
-          alert(err)
-          return
-        }
-
-        doc.transportHere = models
-        /*
-        if (models.length <= 0) {
-          doc.loadLocation(new Db.LocationModel())
-        } else {
-          doc.loadLocation(models[0])
-        }
-        */
-      })
+    loadTransport (trans) {
+      this.$emit('edit', trans)
     }
-  },
-  created () {
-    this.fetchData()
   }
 }
 </script>

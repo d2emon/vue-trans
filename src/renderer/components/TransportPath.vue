@@ -5,18 +5,14 @@
     </b-button-toolbar>
     <b-row>
       <b-nav vertical>
-        <b-nav-item v-for="link in transportLinks" @click="goTransport">{{ link.name }}</b-nav-item>
+        <b-nav-item v-for="link in transport.locations">
+          <a @click="goTransport(link)">{{ link.title }}</a>
+          <sup>
+            <a @click="editTransport(link.id)" title="Edit transport"><i class="fa fa-edit"></i></a>
+            <a @click="deleteTransport(link.id)" title="Delete transport"><i class="fa fa-trash"></i></a>
+          </sup>
+        </b-nav-item>
       </b-nav>
-    </b-row>
-    <b-row>
-      <b-button-toolbar>
-        {{ transportLinks }}
-        <b-button-group>
-          <b-btn>First</b-btn>
-          <b-btn>Second</b-btn>
-          <b-btn>Third</b-btn>
-        </b-button-group> 
-      </b-button-toolbar>
     </b-row>
   </div>
 </template>
@@ -24,22 +20,33 @@
 <script>
 export default {
   name: 'transport-path',
+  props: [
+    'transport',
+    'location'
+  ],
   data () {
     return {
-      transportLinks: [
-        { name: 'ConnectName 4' },
-        { name: 'ConnectName 5' },
-        { name: 'ConnectName 6' }
-      ]
     }
   },
   methods: {
-    goTransport () {
-      alert('dmData.tbLocations.FindKey([dmData.tbTransportLinksLocationId.Value]);')
+    goTransport (link) {
+      this.$emit('go', link)
+    },
+    editTransport (transport) {
+    },
+    deleteTransport (id) {
     },
     addPoint () {
-      // dmData.tbTransportLinks.Append;
-      alert('dmData.tbTransportLinksLocationId.Value := dmData.tbLocationsId.Value;')
+      this.transport.locations.push(this.location)
+      var doc = this
+      this.transport.save(function (err) {
+        if (err) {
+          alert(err)
+          return
+        }
+
+        doc.$emit('update')
+      })
     }
   }
 }
