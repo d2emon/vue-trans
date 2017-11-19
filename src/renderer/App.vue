@@ -23,7 +23,9 @@ export default {
   padding: 0;
 }
 
-/* body { font-family: 'Source Sans Pro', sans-serif; } */
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
 
 #logo {
   height: auto;
