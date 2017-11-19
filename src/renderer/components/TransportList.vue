@@ -14,17 +14,17 @@
     </b-button-toolbar>
     <b-row>
       <b-col md="6">
-        <b-nav vertical>
-          <b-nav-item v-for="trans in transportHere">
-            {{ trans.title }}
+        <b-nav vertical pills>
+          <b-nav-item v-for="trans in transportHere" :active="transport.id === trans.id">
+            <a @click="selectTransport(trans)">{{ trans.title }}</a>
             <b-btn @click="editTransport(trans.id)">Edit</b-btn>
           </b-nav-item>
         </b-nav>
       </b-col>
       <b-col md="6">
-        <b-nav vertical>
-          <b-nav-item v-for="trans in transports">
-            {{ trans.weight }}: {{ trans.title }}
+        <b-nav vertical pills>
+          <b-nav-item v-for="trans in transports" :active="transport.id === trans.id">
+            <a @click="selectTransport(trans)">{{ trans.weight }}: {{ trans.title }}</a>
             <b-btn @click="editTransport(trans.id)">Edit</b-btn>
           </b-nav-item>
         </b-nav>
@@ -49,8 +49,11 @@ export default {
     }
   },
   methods: {
-    selectTransport () {
-      alert('dmData.tbTransport.FindKey([dmData.tbTransportHereTransportId.Value]);')
+    selectTransport (trans) {
+      this.transport = trans
+      // console.log(this.transport)
+      // alert('dmData.tbTransport.FindKey([dmData.tbTransportHereTransportId.Value]);')
+      this.$emit('select', trans)
     },
     editTransport (id) {
       if (!id) {
@@ -92,7 +95,6 @@ export default {
           return
         }
 
-        alert(models)
         doc.transports = models
         /*
         if (models.length <= 0) {
@@ -108,7 +110,6 @@ export default {
           return
         }
 
-        alert(models)
         doc.transportHere = models
         /*
         if (models.length <= 0) {
