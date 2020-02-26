@@ -7,19 +7,11 @@
             <v-container>
               <v-card>
                 <v-container>
-                  <v-text-field
-                    id="db-text-1"
-                    v-model="locations.id"
-                    readonly
-                  ></v-text-field>
-                  <v-text-field
-                    id="db-edit-1"
-                    v-model="locations.locationName"
-                  ></v-text-field>
-                  <v-textarea
-                    id="db-memo-1"
-                    v-model="locations.description"
-                  ></v-textarea>
+                  <location
+                    v-if="locations"
+                    :location="locations"
+                    @change="setLocation"
+                  />
                   <v-data-table
                     id="db-grid-1"
                     :headers="links.headers"
@@ -124,6 +116,9 @@ end
 
 export default Vue.extend({
   name: 'MainPage',
+  components: {
+    Location: () => import('@/components/Location.vue'),
+  },
   computed: {
     ...mapState(['location']),
     /*
@@ -205,6 +200,11 @@ export default Vue.extend({
       items: [],
     },
   }),
+  methods: {
+    setLocation(location: { id: number; locationName: string; description: string; }) {
+      this.locations = location;
+    },
+  },
 });
 </script>
 
