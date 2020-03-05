@@ -2,7 +2,7 @@ import { Module } from 'vuex';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
-import { Location } from './types';
+import { LocationState } from './types';
 import { RootState } from '../../types';
 
 // Location
@@ -33,15 +33,44 @@ import { RootState } from '../../types';
   end
  */
 
-export const state: Location = {
-  locationId: 0,
-  name: 'Name',
-  description: 'Description',
+export const state: LocationState = {
+  // locationId: 0,
+  // name: 'Name',
+  // description: 'Description',
+  loading: false,
+  location: undefined,
+  locations: [
+    {
+      locationId: 1,
+      locationName: 'Локация 1',
+      description: 'description',
+      linkIds: [2],
+    },
+    {
+      locationId: 2,
+      locationName: 'Локация 2',
+      description: 'description',
+      linkIds: [1, 3],
+    },
+    {
+      locationId: 3,
+      locationName: 'Локация 3',
+      description: 'description',
+      linkIds: [2, 4],
+    },
+    {
+      locationId: 4,
+      locationName: 'Локация 4',
+      description: 'description',
+      linkIds: [3],
+    },
+  ],
+  filtered: [],
 };
 
 const namespaced: boolean = true;
 
-const module: Module<Location, RootState> = {
+const module: Module<LocationState, RootState> = {
   namespaced,
   state,
   getters,

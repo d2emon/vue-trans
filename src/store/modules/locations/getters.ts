@@ -1,7 +1,7 @@
 import { GetterTree } from 'vuex';
-import { Location } from './types';
+import { LocationState } from './types';
 import { RootState } from '../../types';
 
-const getters: GetterTree<Location, RootState> = {};
+const getters: GetterTree<LocationState, RootState> = {};
 
 export default getters;

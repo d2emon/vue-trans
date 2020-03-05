@@ -1,61 +1,202 @@
 <template>
   <v-container>
+    <v-toolbar
+      light
+      flat
+    >
+      <v-btn
+        color="primary"
+        dark
+        @click="save"
+      >
+        Сохранить
+      </v-btn>
+    </v-toolbar>
     <v-text-field
-      id="db-text-1"
-      v-model="locationId"
-      readonly
-    ></v-text-field>
-    <v-text-field
-      id="db-edit-1"
+      label="Название"
       v-model="name"
     ></v-text-field>
     <v-textarea
-      id="db-memo-1"
+      label="Описание"
       v-model="description"
     ></v-textarea>
+    <v-data-table
+      :headers="linksHeaders"
+      :items="links"
+      :items-per-page="5"
+    >
+      <template v-slot:top>
+        <v-toolbar
+          light
+          flat
+        >
+          <v-toolbar-title>
+            Переходы
+          </v-toolbar-title>
+          <v-spacer />
+          <add-link-dialog
+            :defaultItem="defaultLocation"
+            @save="addLink"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                dark
+                v-on="on"
+              >
+                Добавить
+              </v-btn>
+            </template>
+          </add-link-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.locationId="{ item, value }">
+        {{ item }}
+        {{ value }}
+
+        {{ item.locationName }}
+        <v-edit-dialog
+          :return-value.sync="item.locationId"
+        >
+          <template v-slot:input>
+            {{ item.locationId }}
+            {{ item.locationName }}
+            <location-lookup v-model="value" />
+          </template>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <delete-link-dialog
+          :item="item"
+          @delete="deleteLink"
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="mr-2"
+              icon
+              text
+              v-on="on"
+            >
+              <v-icon
+                small
+              >
+                mdi-delete
+              </v-icon>
+            </v-btn>
+          </template>
+        </delete-link-dialog>
+        <v-btn
+          class="mr-2"
+          icon
+          text
+          @click="goLocation(item)"
+        >
+          <v-icon
+            small
+          >
+            mdi-arrow-right
+          </v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+    <v-toolbar id="db-navigator-1">
+      <v-toolbar-items>
+      </v-toolbar-items>
+    </v-toolbar>
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
+import { Location } from '@/store/modules/locations/types';
+
+interface DataHeader {
+  text: string,
+  value: string,
+  sortable?: boolean,
+}
+
+interface LocationData {
+  locationId?: number,
+  name?: string,
+  description?: string,
+
+  defaultLocation: Location,
+  linksHeaders: DataHeader[],
+}
 
 export default Vue.extend({
   name: 'Location',
+  components: {
+    AddLinkDialog: () => import('@/modals/AddLink.vue'),
+    DeleteLinkDialog: () => import('@/modals/DeleteLink.vue'),
+    LocationLookup: () => import('@/components/LocationLookup.vue'),
+  },
   props: [
-    'location',
+    'value',
   ],
   computed: {
-    locationId: {
-      get() { return this.location.id; },
-      set(value) {
-        this.$emit('change', {
-          id: value,
-          locationName: this.location.locationName,
-          description: this.location.description,
-        });
-      },
-    },
-    name: {
-      get() { return this.location.locationName; },
-      set(value) {
-        this.$emit('change', {
-          id: this.location.id,
-          locationName: value,
-          description: this.location.description,
-        });
-      },
-    },
-    description: {
-      get() { return this.location.description; },
-      set(value) {
-        this.$emit('change', {
-          id: this.location.id,
-          locationName: this.location.locationName,
-          description: value,
-        });
-      },
+    links: {
+      get() { return this.value.links; },
     },
   },
+  data: (): LocationData => ({
+    locationId: undefined,
+    name: undefined,
+    description: undefined,
+
+    defaultLocation: {
+      locationId: 0,
+      locationName: '',
+      description: '',
+    },
+    linksHeaders: [
+      { text: 'Переход', value: 'locationId' },
+      { text: 'Действия', value: 'actions', sortable: false },
+    ],
+  }),
+  methods: {
+    setLocation(location: Location) {
+      const {
+        locationId,
+        locationName,
+        description,
+      } = location;
+      this.locationId = locationId;
+      this.name = locationName;
+      this.description = description;
+    },
+    save() {
+      this.$emit('input', {
+        locationId: this.locationId,
+        locationName: this.name,
+        description: this.description,
+      });
+    },
+    addLink(link: Location) {
+      this.$emit('addLink', link.locationId);
+    },
+    goLocation(item: Location) {
+      this.$emit('changeLocation', item.locationId);
+    },
+    deleteLink(link: Location) {
+      this.$emit('deleteLink', link.locationId);
+    },
+    setLink(link: Location) {
+      console.log(link);
+    },
+  },
+  watch: {
+    value(location: Location) {
+      this.setLocation(location);
+    },
+    links(value) {
+      console.log(value);
+    },
+  },
+  mounted(): void {
+    this.setLocation(this.value);
+  }
 });
 </script>
 

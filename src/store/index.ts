@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { RootState } from './types';
 // import modules from './modules';
+import locations from './modules/locations';
 
 Vue.use(Vuex);
 
@@ -178,8 +179,6 @@ end
 
  */
 
-
-
 const store: StoreOptions<RootState> = {
   state: {
   },
@@ -189,7 +188,9 @@ const store: StoreOptions<RootState> = {
   actions: {
 
   },
-  modules: {},
+  modules: {
+    locations,
+  },
 };
 
 export default new Vuex.Store<RootState>(store);
