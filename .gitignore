@@ -22,3 +22,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+build/*
+!build/icons
+coverage
+!.gitkeep
+
+package-lock.json
