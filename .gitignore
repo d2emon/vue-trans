@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+# tests
 /tests/e2e/reports/
 selenium-debug.log
 
@@ -30,5 +31,6 @@ coverage
 thumbs.db
 !.gitkeep
 
+# locks
 package-lock.json
 yarn.lock
