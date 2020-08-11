@@ -1,8 +1,6 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-// import locations from '@/store/data/locations'
-
-const locations: { slug: string }[] = [];
+import Vue from 'vue';
+import VueRouter, { RouteConfig } from 'vue-router';
+import locations from '@/store/modules/locations/data';
 
 Vue.use(VueRouter);
 
@@ -17,7 +15,7 @@ const routes: Array<RouteConfig> = [
     name: 'Random',
     redirect: () => {
       const locationId: number = Math.floor(Math.random() * locations.length);
-      return `/location/${locations[locationId].slug}`;
+      return locations[locationId] ? `/location/${locations[locationId].locationId}` : '';
     },
   },
   {

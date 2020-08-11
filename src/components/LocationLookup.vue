@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete
-    v-model="item"
+    v-model="locationId"
     :loading="loading"
     :items="filtered"
     :search-input.sync="search"
@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 import {
   mapActions,
   mapState,
-} from 'vuex'
-import Component from 'vue-class-component'
-import { Watch } from 'vue-property-decorator'
-import { Location } from '@/store/modules/locations/types'
+} from 'vuex';
+import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
+import { Location } from '@/store/modules/locations/types';
 
 @Component({
   computed: {
@@ -39,9 +39,9 @@ import { Location } from '@/store/modules/locations/types'
   ],
 })
 export default class LocationLookup extends Vue {
-  item: any = null;
+  locationId = 0;
 
-  locations!: any[];
+  locations!: Location[];
 
   search = '';
 
@@ -49,48 +49,41 @@ export default class LocationLookup extends Vue {
 
   fetchLocations!: (value: string) => Promise<Location[]>;
 
-  filterLocations(value: string) {
-    return this.fetchLocations(value)
-      .then(() => console.log('lookup search', value));
+  getLocation(locationId?: number): Location | null {
+    return locationId
+      ? (this.locations.find((item) => (item.locationId === locationId)) || null)
+      : null;
   }
 
-  searchItems(value: string) {
-    return this.filterLocations(value);
+  async findLocations(value: string) {
+    if (!value || (value === this.search)) {
+      return;
+    }
+    await this.fetchLocations(value);
   }
 
   setValue(value: number) {
-    console.log(value);
-    const result = value
-      ? this.locations.find((item) => (item.locationId === value))
-      : undefined;
-    this.item = result && result.locationId;
-    this.search = result && result.locationName;
+    const result = this.getLocation(value);
+    this.locationId = result ? Number(result.locationId) : 0;
+    this.search = result ? String(result.locationName) : '';
   }
 
   mounted() {
-    console.log(this.value);
     this.setValue(this.value);
   }
 
-  @Watch('item')
-  onItem(value: any) {
-    console.log(value, this.item);
-    const result = value
-      ? this.locations.find((item) => (item.locationId === value))
-      : undefined;
-    console.log(result, value);
+  @Watch('locationId')
+  onLocationIdChange(value?: number) {
     this.$emit('input', value);
   }
 
   @Watch('search')
-  onSearch(value: string) {
-    console.log(value, this.value);
-    return value && (value !== this.search) && this.searchItems(value);
+  async onSearch(value: string) {
+    await this.findLocations(value);
   }
 
   @Watch('value')
   onValue(value: number) {
-    console.log(value);
     this.setValue(value);
   }
 }

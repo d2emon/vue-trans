@@ -1,8 +1,11 @@
 import { Module } from 'vuex';
+import locations from '@/store/modules/locations/data';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
-import { LocationState } from './types';
+import {
+  LocationState,
+} from './types';
 import { RootState } from '../../types';
 
 // Location
@@ -39,39 +42,12 @@ export const state: LocationState = {
   // description: 'Description',
   loading: false,
   location: undefined,
-  locations: [
-    {
-      locationId: 1,
-      locationName: 'Локация 1',
-      description: 'description',
-      linkIds: [2],
-    },
-    {
-      locationId: 2,
-      locationName: 'Локация 2',
-      description: 'description',
-      linkIds: [1, 3],
-    },
-    {
-      locationId: 3,
-      locationName: 'Локация 3',
-      description: 'description',
-      linkIds: [2, 4],
-    },
-    {
-      locationId: 4,
-      locationName: 'Локация 4',
-      description: 'description',
-      linkIds: [3],
-    },
-  ],
+  locations,
   filtered: [],
 };
 
-const namespaced: boolean = true;
-
 const module: Module<LocationState, RootState> = {
-  namespaced,
+  namespaced: true,
   state,
   getters,
   actions,

@@ -79,9 +79,9 @@ import {
   mapState,
 } from 'vuex';
 import { Location } from '@/store/modules/locations/types';
-import Component from "vue-class-component";
-import locations from "@/services/db/locations";
-import {Watch} from "vue-property-decorator";
+import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 
 interface Link {
   name: string;
@@ -111,14 +111,14 @@ interface Link {
   },
 })
 export default class MainPage extends Vue {
-  location!: any;
+  location!: Location | undefined;
 
   get locationModel() {
     return this.location;
   }
 
   set locationModel(value) {
-    console.log(value);
+    console.log(value, this);
   }
 
   locationId = 0;
@@ -195,14 +195,16 @@ export default class MainPage extends Vue {
     this.saveLocation(location);
   }
 
-  filterLocations(value: string) {
-    return this.fetchLocations(value)
-      .then((locations: Location[]) => console.log('lookup search', value, locations));
+  setLocationId(locationId: number) {
+    this.locationId = locationId;
+  }
+
+  async filterLocations(value: string) {
+    await this.fetchLocations(value);
   }
 
   changeLocation(locationId: number) {
-    console.log(locationId);
-    this.locationId = locationId;
+    this.$router.push(`/location/${locationId}`);
   }
 
   onAddLink(linkId: number) {
@@ -219,14 +221,23 @@ export default class MainPage extends Vue {
     });
   }
 
-  created() {
-    this.filterLocations('');
+  async created() {
+    await this.filterLocations('');
+  }
+
+  mounted() {
+    this.setLocationId(Number(this.$route.params.locationId));
   }
 
   @Watch('locationId')
   onLocationIdChange(value: number) {
-    console.log(value);
     return this.fetchLocation(value);
+  }
+
+  @Watch('$route')
+  onRouteChange(value: Route) {
+    this.setLocationId(Number(value.params.locationId));
+    this.locationId = Number();
   }
 }
 </script>

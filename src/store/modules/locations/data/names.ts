@@ -1,0 +1,28 @@
+const names: { [id: string]: string } = {
+  dramteatr: 'Драмтеатр',
+  'pushkina-lenina': 'Ул. Пушкина - Ул. Ленина',
+  'pushkina-k-marksa': 'Ул. Пушкина - Ул. К. Маркса',
+  '9l-k-marksa': 'Ул. 9-я линия - Ул. К. Маркса',
+  '10l-k-marksa': 'Ул. 10-я линия - Ул. К. Маркса',
+  '11l-k-marksa': 'Ул. 11-я линия - Ул. К. Маркса',
+  '12l-k-marksa': 'Ул. 12-я линия - Ул. К. Маркса',
+  '13l-k-marksa': 'Ул. 13-я линия - Ул. К. Маркса',
+  '13l-shevchenko': 'Ул. 13-я линия - Ул. Шевченко',
+  '12l-1-donetskaya': 'Ул. 12-я линия - Ул. 1-я Донецкая',
+  '12l-sovetskaya': 'Ул. 12-я линия - Ул. Советская',
+  '13l-1-donetskaya': 'Ул. 13-я линия - Ул. 1-я Донецкая',
+  'pl-sovetskaya': 'Пл. Советская',
+  'centralnyy-rynok': 'Центральный рынок',
+  'oboronnaya-novosvetlovskaya': 'Ул. Оборонная - Ул. Новосветловская',
+  'kinoteatr-ukraina': 'Кинотеатр "Украина"',
+  'stadion-avangard': 'Стадион "Авангард"',
+  'dk-stroiteley': 'Д.К. Строителей',
+  '5-shkola': 'Школа №5',
+  taksopark: 'Таксопарк',
+  'akkumulyatornyy-zavod': 'Аккумуляторный завод',
+  'inzhenernyy-korpus': 'Инженерный корпус',
+  'gostinitsa-turist': 'Гостиница "Турист"',
+  'ostraya-mogila': '"Острая Могила"',
+};
+
+export default names;

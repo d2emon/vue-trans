@@ -51,9 +51,6 @@
         </v-toolbar>
       </template>
       <template v-slot:item.locationId="{ item, value }">
-        {{ item }}
-        {{ value }}
-
         {{ item.locationName }}
         <v-edit-dialog
           :return-value.sync="item.locationId"
@@ -61,7 +58,10 @@
           <template v-slot:input>
             {{ item.locationId }}
             {{ item.locationName }}
-            <location-lookup v-model="value" />
+            <location-lookup
+              :value="value"
+              @change="onChange"
+            />
           </template>
         </v-edit-dialog>
       </template>
@@ -99,32 +99,19 @@
         </v-btn>
       </template>
     </v-data-table>
-    <v-toolbar id="db-navigator-1">
-      <v-toolbar-items>
-      </v-toolbar-items>
-    </v-toolbar>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
 import { Location } from '@/store/modules/locations/types';
-import Component from "vue-class-component";
-import {Watch} from "vue-property-decorator";
 
 interface DataHeader {
-  text: string,
-  value: string,
-  sortable?: boolean,
-}
-
-interface LocationData {
-  locationId?: number,
-  name?: string,
-  description?: string,
-
-  defaultLocation: Location,
-  linksHeaders: DataHeader[],
+  text: string;
+  value: string;
+  sortable?: boolean;
 }
 
 @Component({
@@ -138,13 +125,13 @@ interface LocationData {
   ],
 })
 export default class LocationComponent extends Vue {
-  value!: { links: any };
+  value!: Location;
 
-  locationId?: number;
+  locationId = 0;
 
-  name?: string;
+  name = '';
 
-  description?: string;
+  description = '';
 
   defaultLocation: Location = {
     locationId: 0,
@@ -157,7 +144,7 @@ export default class LocationComponent extends Vue {
     { text: 'Действия', value: 'actions', sortable: false },
   ];
 
-  get links() {
+  get links(): Location[] | undefined {
     return this.value.links;
   }
 
@@ -167,9 +154,9 @@ export default class LocationComponent extends Vue {
       locationName,
       description,
     } = location;
-    this.locationId = locationId;
-    this.name = locationName;
-    this.description = description;
+    this.locationId = locationId || 0;
+    this.name = locationName || '';
+    this.description = description || '';
   }
 
   save() {
@@ -184,16 +171,20 @@ export default class LocationComponent extends Vue {
     this.$emit('addLink', link.locationId);
   }
 
-  goLocation(item: Location) {
-    this.$emit('changeLocation', item.locationId);
-  }
-
   deleteLink(link: Location) {
     this.$emit('deleteLink', link.locationId);
   }
 
+  goLocation(link: Location) {
+    this.$emit('changeLocation', link.locationId);
+  }
+
+  onChange(value: Location) {
+    this.$emit('input', value);
+  }
+
   setLink(link: Location) {
-    console.log(link);
+    console.log(link, this.links);
   }
 
   @Watch('value')
@@ -202,8 +193,8 @@ export default class LocationComponent extends Vue {
   }
 
   @Watch('links')
-  onLinks(value: any) {
-    console.log(value);
+  onLinks(value?: Location[]) {
+    console.log(value, this.links);
   }
 
   mounted() {
