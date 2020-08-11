@@ -45,14 +45,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
 import {
   mapActions,
   mapState,
-} from 'vuex';
+} from 'vuex'
+import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
 
-export default Vue.extend({
-  name: 'AddLink',
+@Component({
   components: {
     LocationLookup: () => import('@/components/LocationLookup.vue'),
   },
@@ -60,44 +61,51 @@ export default Vue.extend({
     ...mapState('locations', [
       'locations',
     ]),
-    itemId: {
-      get() {
-        return this.item && this.item.locationId;
-      },
-      set(value) {
-        this.item = value && this.locations.find(item => (item.locationId === value));
-      },
-    },
-  },
-  data: () => ({
-    item: null,
-    show: false,
-  }),
-  methods: {
-    resetItem() {
-      this.item = this.defaultItem;
-    },
-    close() {
-      this.show = false;
-      setTimeout(this.resetItem, 0);
-    },
-    save() {
-      this.$emit('save', this.item);
-      this.close();
-    },
   },
   props: [
     'defaultItem',
   ],
-  watch: {
-    show(value) {
-      return value || this.close();
-    },
-  },
+})
+export default class AddLink extends Vue {
+  defaultItem!: any;
+
+  item: any = null;
+
+  locations!: any[];
+
+  show = false;
+
+  get itemId() {
+    return this.item && this.item.locationId;
+  }
+
+  set itemId(value: any) {
+    this.item = value && this.locations.find((item) => (item.locationId === value));
+  }
+
+  resetItem() {
+    this.item = this.defaultItem;
+  }
+
+  close() {
+    this.show = false;
+    setTimeout(this.resetItem, 0);
+  }
+
+  save() {
+    this.$emit('save', this.item);
+    this.close();
+  }
+
   mounted() {
     this.resetItem();
-  },
-});
+  };
+
+  @Watch('show')
+  onShowChange(value: boolean) {
+    return value || this.close();
+  }
+}
 </script>
 
 <style scoped>

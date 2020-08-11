@@ -4,6 +4,8 @@ node_modules
 
 /tests/e2e/reports/
 selenium-debug.log
+chromedriver.log
+geckodriver.log
 
 # local env files
 .env.local
@@ -22,3 +24,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+package-lock.json
+yarn.lock

@@ -109,6 +109,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Location } from '@/store/modules/locations/types';
+import Component from "vue-class-component";
+import {Watch} from "vue-property-decorator";
 
 interface DataHeader {
   text: string,
@@ -125,8 +127,7 @@ interface LocationData {
   linksHeaders: DataHeader[],
 }
 
-export default Vue.extend({
-  name: 'Location',
+@Component({
   components: {
     AddLinkDialog: () => import('@/modals/AddLink.vue'),
     DeleteLinkDialog: () => import('@/modals/DeleteLink.vue'),
@@ -135,69 +136,80 @@ export default Vue.extend({
   props: [
     'value',
   ],
-  computed: {
-    links: {
-      get() { return this.value.links; },
-    },
-  },
-  data: (): LocationData => ({
-    locationId: undefined,
-    name: undefined,
-    description: undefined,
+})
+export default class LocationComponent extends Vue {
+  value!: { links: any };
 
-    defaultLocation: {
-      locationId: 0,
-      locationName: '',
-      description: '',
-    },
-    linksHeaders: [
-      { text: 'Переход', value: 'locationId' },
-      { text: 'Действия', value: 'actions', sortable: false },
-    ],
-  }),
-  methods: {
-    setLocation(location: Location) {
-      const {
-        locationId,
-        locationName,
-        description,
-      } = location;
-      this.locationId = locationId;
-      this.name = locationName;
-      this.description = description;
-    },
-    save() {
-      this.$emit('input', {
-        locationId: this.locationId,
-        locationName: this.name,
-        description: this.description,
-      });
-    },
-    addLink(link: Location) {
-      this.$emit('addLink', link.locationId);
-    },
-    goLocation(item: Location) {
-      this.$emit('changeLocation', item.locationId);
-    },
-    deleteLink(link: Location) {
-      this.$emit('deleteLink', link.locationId);
-    },
-    setLink(link: Location) {
-      console.log(link);
-    },
-  },
-  watch: {
-    value(location: Location) {
-      this.setLocation(location);
-    },
-    links(value) {
-      console.log(value);
-    },
-  },
-  mounted(): void {
+  locationId?: number;
+
+  name?: string;
+
+  description?: string;
+
+  defaultLocation: Location = {
+    locationId: 0,
+    locationName: '',
+    description: '',
+  };
+
+  linksHeaders: DataHeader[] = [
+    { text: 'Переход', value: 'locationId' },
+    { text: 'Действия', value: 'actions', sortable: false },
+  ];
+
+  get links() {
+    return this.value.links;
+  }
+
+  setLocation(location: Location) {
+    const {
+      locationId,
+      locationName,
+      description,
+    } = location;
+    this.locationId = locationId;
+    this.name = locationName;
+    this.description = description;
+  }
+
+  save() {
+    this.$emit('input', {
+      locationId: this.locationId,
+      locationName: this.name,
+      description: this.description,
+    });
+  }
+
+  addLink(link: Location) {
+    this.$emit('addLink', link.locationId);
+  }
+
+  goLocation(item: Location) {
+    this.$emit('changeLocation', item.locationId);
+  }
+
+  deleteLink(link: Location) {
+    this.$emit('deleteLink', link.locationId);
+  }
+
+  setLink(link: Location) {
+    console.log(link);
+  }
+
+  @Watch('value')
+  onValue(location: Location) {
+    this.setLocation(location);
+  }
+
+  @Watch('links')
+  onLinks(value: any) {
+    console.log(value);
+  }
+
+  mounted() {
     this.setLocation(this.value);
   }
-});
+}
 </script>
 
 <style scoped>

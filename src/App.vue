@@ -1,19 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Trans</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        text
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <app-header />
 
     <v-content>
       <router-view/>
@@ -23,11 +10,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Component from 'vue-class-component';
 
-export default Vue.extend({
-  name: 'App',
-  data: () => ({
-    //
-  }),
-});
+@Component({
+  components: {
+    AppHeader: () => import('@/components/AppHeader.vue'),
+  },
+})
+export default class App extends Vue {}
 </script>
+
+<style>
+blockquote {
+  border-left: .25em solid #dfe2e5;
+  color: #6a737d;
+  padding: 0 1em;
+}
+</style>
