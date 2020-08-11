@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import { MutationTree } from 'vuex';
-import { Location, LocationState } from './types';
+import {
+  Location,
+  LocationState,
+  TransportData,
+} from './types';
 
 const mutations: MutationTree<LocationState> = {
   /*
@@ -26,7 +30,7 @@ const mutations: MutationTree<LocationState> = {
     const {
       locationId,
     } = value;
-    const location = state.locations.find(item => (item.locationId === locationId));
+    const location = state.locations.find((item) => (item.locationId === locationId));
     if (location) {
       Vue.set(
         state.locations,
@@ -47,6 +51,11 @@ const mutations: MutationTree<LocationState> = {
         ? (location.locationName || '').toLowerCase().indexOf(search) > -1
         : true;
     }),
+  ),
+  setLocationTransport: (state: LocationState, transport: TransportData[]) => Vue.set(
+    state,
+    'currentTransport',
+    transport,
   ),
 };
 

@@ -1,0 +1,30 @@
+const transportLinks: { [id: string]: string[] } = {
+  1: [
+    'dramteatr',
+    'pushkina-lenina',
+    'pushkina-k-marksa',
+    '9l-k-marksa',
+    '10l-k-marksa',
+    '11l-k-marksa',
+    '12l-k-marksa',
+    '13l-k-marksa',
+    '13l-shevchenko',
+    '13l-1-donetskaya',
+    '12l-1-donetskaya',
+    '12l-sovetskaya',
+    'pl-sovetskaya',
+    'centralnyy-rynok',
+    'oboronnaya-novosvetlovskaya',
+    'kinoteatr-ukraina',
+    'stadion-avangard',
+    'dk-stroiteley',
+    '5-shkola',
+    'taksopark',
+    'akkumulyatornyy-zavod',
+    'inzhenernyy-korpus',
+    'gostinitsa-turist',
+    'ostraya-mogila',
+  ],
+};
+
+export default transportLinks;

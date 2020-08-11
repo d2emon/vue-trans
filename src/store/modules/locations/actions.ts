@@ -1,9 +1,13 @@
 import { ActionTree } from 'vuex';
-import { Location, LocationState } from './types';
+import {
+  Location,
+  LocationState,
+  TransportData,
+} from './types';
 import { RootState } from '../../types';
 
 const findLocation = (locationId: number, locations: Location[]): Location | undefined => locations
-  .find(item => item.locationId === locationId);
+  .find((item) => (item.locationId === locationId));
 const injectLink = (locationId: number, locations: Location[]): Location | undefined => {
   const location = findLocation(locationId, locations);
   if (!location) {
@@ -11,8 +15,8 @@ const injectLink = (locationId: number, locations: Location[]): Location | undef
   }
   const linkIds = location.linkIds || [];
   const links = linkIds
-    .map(linkId => findLocation(linkId, locations))
-    .map(link => (link
+    .map((linkId) => findLocation(linkId, locations))
+    .map((link) => (link
       ? {
         locationId: link.locationId,
         locationName: link.locationName,
@@ -68,13 +72,50 @@ const actions: ActionTree<LocationState, RootState> = {
       commit,
       state,
     },
-    value: string = '',
+    value = '',
   ): Promise<Location[]> => new Promise((resolve) => {
     commit('setLoading', true);
     setTimeout(() => {
       commit('filterLocations', value);
       commit('setLoading', false);
       return resolve(state.filtered);
+    }, 0);
+  }),
+  fetchLocationTransport: (
+    {
+      commit,
+      state,
+    },
+    locationId = 0,
+  ): Promise<TransportData[]> => new Promise((resolve) => {
+    setTimeout(() => {
+      const transport: TransportData[] = state.transport
+        .filter((t) => (t.linkIds && (t.linkIds.indexOf(locationId) >= 0)));
+      commit('setLocationTransport', transport);
+      return resolve(transport);
+    }, 0);
+  }),
+  fetchTransportLinks: (
+    {
+      state,
+    },
+    transport?: TransportData,
+  ): Promise<Location[]> => new Promise((resolve) => {
+    setTimeout(() => {
+      if (!transport || !transport.linkIds) {
+        return resolve([]);
+      }
+      const locations: Location[] = transport.linkIds.reduce(
+        (result: Location[], locationId: number) => {
+          const location = state.locations.find((l) => (l.locationId === locationId));
+          if (location) {
+            result.push(location);
+          }
+          return result;
+        },
+        [],
+      );
+      return resolve(locations);
     }, 0);
   }),
   addLink: (
@@ -85,18 +126,15 @@ const actions: ActionTree<LocationState, RootState> = {
     {
       locationId,
       linkId,
-    }: {
-      locationId: number,
-      linkId: number,
     },
   ): Promise<Location> => new Promise((resolve) => {
     setTimeout(() => {
-      const location = state.locations.find(item => (item.locationId === locationId));
+      const location = state.locations.find((item) => (item.locationId === locationId));
       const linkIds = (location && location.linkIds) || [];
       commit('setLocation', {
         locationId,
         linkIds: [
-          ...linkIds.filter(link => link !== linkId),
+          ...linkIds.filter((link) => (link !== linkId)),
           linkId,
         ],
       });
@@ -113,17 +151,14 @@ const actions: ActionTree<LocationState, RootState> = {
     {
       locationId,
       linkId,
-    }: {
-      locationId: number,
-      linkId: number,
     },
   ): Promise<Location> => new Promise((resolve) => {
     setTimeout(() => {
-      const location = state.locations.find(item => (item.locationId === locationId));
+      const location = state.locations.find((item) => (item.locationId === locationId));
       const linkIds = (location && location.linkIds) || [];
       commit('setLocation', {
         locationId,
-        linkIds: linkIds.filter(link => link !== linkId),
+        linkIds: linkIds.filter((link) => (link !== linkId)),
       });
       const result = injectLink(locationId, state.locations);
       commit('selectLocation', result);

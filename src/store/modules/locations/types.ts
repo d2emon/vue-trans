@@ -6,6 +6,13 @@ export interface Location {
   linkIds?: number[],
 }
 
+export interface TransportData {
+  transportId: number;
+  transportType: string;
+  routeId: string;
+  linkIds?: number[],
+}
+
 export interface LocationState {
   // locationId: number,
   // name: string,
@@ -14,4 +21,6 @@ export interface LocationState {
   location?: Location,
   locations: Location[],
   filtered: Location[],
+  transport: TransportData[],
+  currentTransport?: TransportData[],
 }

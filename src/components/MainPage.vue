@@ -24,24 +24,35 @@
         </v-col>
         <v-col md="7">
           <v-row>
+            <v-toolbar
+              light
+              flat
+            >
+              <v-toolbar-title>
+                Транспорт
+              </v-toolbar-title>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                dark
+              >
+                Добавить
+              </v-btn>
+            </v-toolbar>
             <v-container>
               <v-card>
                 <v-row>
                   <v-col md="6">
-                    <v-data-table
-                      id="db-grid-2"
-                      :headers="transportHere.headers"
-                      :items="transportHere.items"
-                      :items-per-page="5"
-                    ></v-data-table>
+                    <transport
+                      :transport="currentTransport || []"
+                      @change="selectTransport"
+                    />
                   </v-col>
                   <v-col md="6">
-                    <v-data-table
-                      id="db-grid-4"
-                      :headers="transport.headers"
-                      :items="transport.items"
-                      :items-per-page="5"
-                    ></v-data-table>
+                    <transport
+                      :transport="transport || []"
+                      @change="selectTransport"
+                    />
                     <v-toolbar id="db-navigator-3">
                       <v-toolbar-items>
                         <v-btn
@@ -54,15 +65,38 @@
                   </v-col>
                 </v-row>
                 <v-data-table
-                  id="db-grid-3"
-                  :headers="transportLinks.headers"
-                  :items="transportLinks.items"
-                  :items-per-page="5"
-                ></v-data-table>
-                <v-toolbar id="db-navigator-2">
-                  <v-toolbar-items>
-                  </v-toolbar-items>
-                </v-toolbar>
+                  v-if="selectedTransport"
+                  :headers="transportLinksHeaders"
+                  :items="transportLinks"
+                  :items-per-page="15"
+                >
+                  <template v-slot:top>
+                    <v-toolbar
+                      light
+                      flat
+                    >
+                      <v-toolbar-title>
+                        {{ selectedTransport.transportType }}
+                        №{{ selectedTransport.routeId}}
+                      </v-toolbar-title>
+                    </v-toolbar>
+                  </template>
+                  <template v-slot:item.actions="{ item }">
+                    <v-btn
+                      class="mr-2"
+                      icon
+                      text
+                      :disabled="item.locationId === locationId"
+                      @click="changeLocation(item.locationId)"
+                    >
+                      <v-icon
+                        small
+                      >
+                        mdi-arrow-right
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                </v-data-table>
               </v-card>
             </v-container>
           </v-row>
@@ -78,10 +112,13 @@ import {
   mapActions,
   mapState,
 } from 'vuex';
-import { Location } from '@/store/modules/locations/types';
 import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router';
+import {
+  Location,
+  TransportData,
+} from '@/store/modules/locations/types';
 
 interface Link {
   name: string;
@@ -92,26 +129,37 @@ interface Link {
   components: {
     LocationLookup: () => import('@/components/LocationLookup.vue'),
     Location: () => import('@/components/Location.vue'),
+    Transport: () => import('@/components/Transport.vue'),
   },
   computed: {
     ...mapState('locations', [
       'location',
       'locations',
       'filtered',
+      'transport',
+      'currentTransport',
     ]),
   },
   methods: {
     ...mapActions('locations', [
       'fetchLocation',
       'fetchLocations',
+      'fetchLocationTransport',
       'saveLocation',
       'addLink',
       'deleteLink',
+      'fetchTransportLinks',
     ]),
   },
 })
 export default class MainPage extends Vue {
   location!: Location | undefined;
+
+  transport!: TransportData[];
+
+  currentTransport!: TransportData[] | undefined;
+
+  selectedTransport: TransportData | null = null;
 
   get locationModel() {
     return this.location;
@@ -130,56 +178,12 @@ export default class MainPage extends Vue {
     { name: 'link4', locationName: 'Name' },
   ];
 
-  transport = {
-    headers: [
-      {
-        text: 'Dessert (100g serving)',
-        align: 'left',
-        sortable: false,
-        value: 'name',
-      },
-      { text: 'Calories', value: 'calories' },
-      { text: 'Fat (g)', value: 'fat' },
-      { text: 'Carbs (g)', value: 'carbs' },
-      { text: 'Protein (g)', value: 'protein' },
-      { text: 'Iron (%)', value: 'iron' },
-    ],
-    items: [],
-  };
+  transportLinksHeaders = [
+    { text: 'Переход', value: 'locationName' },
+    { text: 'Действия', value: 'actions', sortable: false },
+  ];
 
-  transportHere = {
-    headers: [
-      {
-        text: 'Dessert (100g serving)',
-        align: 'left',
-        sortable: false,
-        value: 'name',
-      },
-      { text: 'Calories', value: 'calories' },
-      { text: 'Fat (g)', value: 'fat' },
-      { text: 'Carbs (g)', value: 'carbs' },
-      { text: 'Protein (g)', value: 'protein' },
-      { text: 'Iron (%)', value: 'iron' },
-    ],
-    items: [],
-  };
-
-  transportLinks = {
-    headers: [
-      {
-        text: 'Dessert (100g serving)',
-        align: 'left',
-        sortable: false,
-        value: 'name',
-      },
-      { text: 'Calories', value: 'calories' },
-      { text: 'Fat (g)', value: 'fat' },
-      { text: 'Carbs (g)', value: 'carbs' },
-      { text: 'Protein (g)', value: 'protein' },
-      { text: 'Iron (%)', value: 'iron' },
-    ],
-    items: [],
-  };
+  transportLinks: Location[] = [];
 
   addLink!: (payload: {}) => void;
 
@@ -187,7 +191,11 @@ export default class MainPage extends Vue {
 
   fetchLocations!: (value: string) => Promise<Location[]>;
 
+  fetchLocationTransport!: (locationId: number) => Promise<TransportData[]>;
+
   fetchLocation!: (value: number) => void;
+
+  fetchTransportLinks!: (value: TransportData) => Promise<Location[]>;
 
   saveLocation!: (location: Location) => void;
 
@@ -195,8 +203,9 @@ export default class MainPage extends Vue {
     this.saveLocation(location);
   }
 
-  setLocationId(locationId: number) {
+  async setLocationId(locationId: number) {
     this.locationId = locationId;
+    await this.fetchLocationTransport(locationId);
   }
 
   async filterLocations(value: string) {
@@ -204,7 +213,15 @@ export default class MainPage extends Vue {
   }
 
   changeLocation(locationId: number) {
-    this.$router.push(`/location/${locationId}`);
+    if (locationId !== this.locationId) {
+      this.$router.push(`/location/${locationId}`);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  async selectTransport(transport: TransportData) {
+    this.selectedTransport = transport;
+    this.transportLinks = await this.fetchTransportLinks(transport);
   }
 
   onAddLink(linkId: number) {
@@ -237,7 +254,6 @@ export default class MainPage extends Vue {
   @Watch('$route')
   onRouteChange(value: Route) {
     this.setLocationId(Number(value.params.locationId));
-    this.locationId = Number();
   }
 }
 </script>

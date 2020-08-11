@@ -82,9 +82,11 @@ const slugs: string[] = [
   'dramteatr',
 ];
 
+export const locationIdBySlug = (slug: string) => slugs.indexOf(slug) + 1;
+
 const linksBySlug = (slug: string): number[] => {
   const itemLinks: string[] = links[slug] || [];
-  return itemLinks.map((linkSlug: string) => slugs.indexOf(linkSlug) + 1);
+  return itemLinks.map(locationIdBySlug);
 };
 
 const locations: Location[] = slugs

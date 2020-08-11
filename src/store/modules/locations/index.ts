@@ -1,5 +1,4 @@
 import { Module } from 'vuex';
-import locations from '@/store/modules/locations/data';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
@@ -7,6 +6,8 @@ import {
   LocationState,
 } from './types';
 import { RootState } from '../../types';
+import locations from './data';
+import transport from './data/transport';
 
 // Location
 /*
@@ -44,6 +45,8 @@ export const state: LocationState = {
   location: undefined,
   locations,
   filtered: [],
+  transport,
+  currentTransport: [],
 };
 
 const module: Module<LocationState, RootState> = {
