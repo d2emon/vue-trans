@@ -3,11 +3,13 @@
     <v-card>
       <v-container>
         <v-row>
+          <v-col md="4">
+            <location-lookup v-model="lookupLocationId" />
+          </v-col>
           <v-col>
-            <location-data
-              :location-id="locationId"
-              :location="location"
-              @input="setLocation"
+            <location
+              v-if="location"
+              v-model="locationModel"
               @changeLocation="changeLocation"
               @search="filterLocations"
               @addLink="onAddLink"
@@ -49,7 +51,8 @@ import {
 
 @Component({
   components: {
-    LocationData: () => import('@/components/LocationData.vue'),
+    LocationLookup: () => import('@/components/LocationLookup.vue'),
+    Location: () => import('@/components/Location.vue'),
     TransportDataComponent: () => import('@/components/TransportData.vue'),
   },
   computed: {
@@ -98,9 +101,25 @@ class Home extends Vue {
 
   fetchTransportLinks!: (value: TransportData) => Promise<Location[]>;
 
-  saveLocation!: (location: Location) => void;
+  saveLocation!: (location?: Location) => void;
 
-  setLocation(location: Location) {
+  get lookupLocationId() {
+    return this.locationId;
+  }
+
+  set lookupLocationId(value) {
+    this.changeLocation(value);
+  }
+
+  get locationModel(): Location | undefined {
+    return this.location;
+  }
+
+  set locationModel(value: Location | undefined) {
+    this.setLocation(value);
+  }
+
+  setLocation(location?: Location) {
     this.saveLocation(location);
   }
 

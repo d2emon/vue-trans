@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 import {
   mapActions,
   mapState,
-} from 'vuex'
+} from 'vuex';
 import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 
@@ -99,7 +99,7 @@ class AddLink extends Vue {
 
   mounted() {
     this.resetItem();
-  };
+  }
 
   @Watch('show')
   onShowChange(value: boolean) {
