@@ -23,13 +23,9 @@ export interface FieldInterface {
   size?: number,
 }
 
-export interface LookupFieldInterface extends FieldInterface {
-  lookupDataSet: TableInterface,
-  lookupKeyFields: string,
-  lookupResultField: string,
-  keyFields: string,
-  size?: number,
-  lookup: boolean,
+// DataSource
+export interface DataSourceInterface extends Component {
+  dataSet: TableInterface,
 }
 
 // Table
@@ -48,9 +44,13 @@ export interface TableInterface extends Component {
   all(): ({} | undefined)[];
 }
 
-// DataSource
-export interface DataSourceInterface extends Component {
-  dataSet: TableInterface,
+export interface LookupFieldInterface extends FieldInterface {
+  lookupDataSet: TableInterface,
+  lookupKeyFields: string,
+  lookupResultField: string,
+  keyFields: string,
+  size?: number,
+  lookup: boolean,
 }
 
 // Main

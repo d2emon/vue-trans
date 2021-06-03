@@ -66,7 +66,7 @@ import { Watch } from 'vue-property-decorator';
     'defaultItem',
   ],
 })
-export default class AddLink extends Vue {
+class AddLink extends Vue {
   defaultItem!: any;
 
   item: any = null;
@@ -106,6 +106,8 @@ export default class AddLink extends Vue {
     return value || this.close();
   }
 }
+
+export default AddLink;
 </script>
 
 <style scoped>

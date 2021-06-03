@@ -38,7 +38,7 @@ import { Location } from '@/store/modules/locations/types';
     'value',
   ],
 })
-export default class LocationLookup extends Vue {
+class LocationLookup extends Vue {
   locationId = 0;
 
   locations!: Location[];
@@ -87,6 +87,7 @@ export default class LocationLookup extends Vue {
     this.setValue(value);
   }
 }
+export default LocationLookup;
 </script>
 
 <style scoped>

@@ -66,7 +66,7 @@ interface MenuItem {
 }
 
 @Component
-export default class AppHeader extends Vue {
+class AppHeader extends Vue {
   categories: string[] = [];
 
   menu: MenuItem[] = [
@@ -76,4 +76,6 @@ export default class AppHeader extends Vue {
     },
   ];
 }
+
+export default AppHeader;
 </script>

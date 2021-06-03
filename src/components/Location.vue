@@ -124,7 +124,7 @@ interface DataHeader {
     'value',
   ],
 })
-export default class LocationComponent extends Vue {
+class LocationComponent extends Vue {
   value!: Location;
 
   locationId = 0;
@@ -201,6 +201,7 @@ export default class LocationComponent extends Vue {
     this.setLocation(this.value);
   }
 }
+export default LocationComponent;
 </script>
 
 <style scoped>

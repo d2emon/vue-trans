@@ -80,6 +80,14 @@ export class Table implements TableInterface {
   }
 }
 
+export class DataSource implements DataSourceInterface {
+  dataSet: TableInterface;
+
+  constructor(dataSet: TableInterface) {
+    this.dataSet = dataSet;
+  }
+}
+
 export class DetailTable extends Table {
   indexFieldNames: string | undefined;
 
@@ -109,18 +117,10 @@ export class DetailTable extends Table {
   }
 }
 
-export class DataSource implements DataSourceInterface {
-  dataSet: TableInterface;
-
-  constructor(dataSet: TableInterface) {
-    this.dataSet = dataSet;
-  }
-}
-
 export class Database implements DatabaseInterface {
   name: string;
 
-  tables: [TableInterface?];
+  tables: [TableInterface] | [];
 
   session: SessionInterface;
 
@@ -161,6 +161,7 @@ export class Database implements DatabaseInterface {
       // ids,
       // get,
     );
+    // @ts-ignore
     this.tables.push(table);
     return table;
   }

@@ -1,5 +1,5 @@
 import { TransportData } from '@/store/modules/locations/types';
-import locations, {locationIdBySlug} from './index';
+import locations, { locationIdBySlug } from './index';
 import transportLinks from './transportLinks';
 
 const tramIds = [
@@ -34,7 +34,7 @@ const busIds = [
 const linkIdsByTransportId = (routeId: string): number[] => {
   const slugs: string[] = transportLinks[routeId] || [];
   return slugs.map(locationIdBySlug);
-}
+};
 
 const trams: TransportData[] = tramIds.map((routeId: string, transportId: number) => ({
   transportId: transportId + 1,

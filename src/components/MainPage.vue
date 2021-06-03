@@ -152,7 +152,7 @@ interface Link {
     ]),
   },
 })
-export default class MainPage extends Vue {
+class MainPage extends Vue {
   location!: Location | undefined;
 
   transport!: TransportData[];
@@ -256,6 +256,7 @@ export default class MainPage extends Vue {
     this.setLocationId(Number(value.params.locationId));
   }
 }
+export default MainPage;
 </script>
 
 <style scoped>

@@ -56,7 +56,7 @@ interface DataHeader {
     'transport',
   ],
 })
-export default class LocationComponent extends Vue {
+class LocationComponent extends Vue {
   transport!: TransportData[];
 
   transportHeaders: DataHeader[] = [
@@ -69,4 +69,5 @@ export default class LocationComponent extends Vue {
     this.$emit('change', transport);
   }
 }
+export default LocationComponent;
 </script>
