@@ -17,7 +17,9 @@ import Component from 'vue-class-component';
     AppHeader: () => import('@/components/AppHeader.vue'),
   },
 })
-export default class App extends Vue {}
+class App extends Vue {}
+
+export default App;
 </script>
 
 <style>
