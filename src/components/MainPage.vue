@@ -5,20 +5,15 @@
         <v-col md="5">
           <v-row>
             <v-container>
-              <location-lookup v-model="locationId" />
-              <v-card>
-                <v-container>
-                  <location
-                    v-if="location"
-                    :value="location"
-                    @input="setLocation"
-                    @changeLocation="changeLocation"
-                    @search="filterLocations"
-                    @addLink="onAddLink"
-                    @deleteLink="onDeleteLink"
-                  />
-                </v-container>
-              </v-card>
+              <location-data
+                :location-id="locationId"
+                :location="location"
+                @input="setLocation"
+                @changeLocation="changeLocation"
+                @search="filterLocations"
+                @addLink="onAddLink"
+                @deleteLink="onDeleteLink"
+              />
             </v-container>
           </v-row>
         </v-col>
@@ -127,6 +122,7 @@ interface Link {
 
 @Component({
   components: {
+    LocationData: () => import('@/components/LocationData.vue'),
     LocationLookup: () => import('@/components/LocationLookup.vue'),
     Location: () => import('@/components/Location.vue'),
     Transport: () => import('@/components/Transport.vue'),
