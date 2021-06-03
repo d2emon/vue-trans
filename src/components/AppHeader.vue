@@ -30,12 +30,12 @@
 
         <v-list>
           <v-list-item
-            v-for="(subitem, subitemId) in item.items"
-            :key="subitemId"
-            :to="subitem.to"
+            v-for="(subItem, subItemId) in item.items"
+            :key="subItemId"
+            :to="subItem.to"
           >
             <v-list-item-title>
-              {{ subitem.title }}
+              {{ subItem.title }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -58,23 +58,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-interface MenuItem {
-  title: string;
-  to?: string;
-  items?: MenuItem[];
-}
+import { Prop } from 'vue-property-decorator';
+import { MenuItem } from '@/data/mainMenu';
 
 @Component
 class AppHeader extends Vue {
-  categories: string[] = [];
-
-  menu: MenuItem[] = [
-    {
-      title: 'Random',
-      to: '/random',
-    },
-  ];
+  @Prop({ type: Array, default: [] })
+  menu!: MenuItem[];
 }
 
 export default AppHeader;

@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <main-page />
+    <v-card>
+      <v-container>
+        <main-page />
+      </v-container>
+    </v-card>
   </v-container>
 </template>
 

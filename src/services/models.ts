@@ -161,8 +161,7 @@ export class Database implements DatabaseInterface {
       // ids,
       // get,
     );
-    // @ts-ignore
-    this.tables.push(table);
+    // this.tables.push(table);
     return table;
   }
 
@@ -185,7 +184,7 @@ export class Database implements DatabaseInterface {
       // ids,
       // get,
     );
-    this.tables.push(table);
+    // this.tables.push(table);
     return table;
   }
 }

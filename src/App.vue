@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-header />
+    <app-header :menu="mainMenu" />
 
     <v-content>
       <router-view/>
@@ -11,13 +11,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import mainMenu, { MenuItem } from '@/data/mainMenu';
 
 @Component({
   components: {
     AppHeader: () => import('@/components/AppHeader.vue'),
   },
 })
-class App extends Vue {}
+class App extends Vue {
+  mainMenu: MenuItem[] = mainMenu
+}
 
 export default App;
 </script>
