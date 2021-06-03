@@ -13,7 +13,6 @@ import {
   createTransportLinksDbHere,
 } from './db/transportLinks';
 
-
 // Tables
 const tbLocationsLookup = database.addTable(
   'locationName',
