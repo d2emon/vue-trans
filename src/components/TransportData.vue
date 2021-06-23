@@ -1,79 +1,51 @@
 <template>
   <v-card>
     <v-toolbar
-      light
-      flat
+      color="primary"
+      dark
     >
       <v-toolbar-title>
         Транспорт
       </v-toolbar-title>
       <v-spacer />
       <v-btn
-        color="primary"
-        dark
+        text
       >
         Добавить
       </v-btn>
     </v-toolbar>
     <v-container>
-      <v-card>
-        <v-row>
-          <v-col md="6">
-            <transport
-              :transport="currentTransport || []"
-              @change="selectTransport"
-            />
-          </v-col>
-          <v-col md="6">
-            <transport
-              :transport="transport || []"
-              @change="selectTransport"
-            />
-            <v-toolbar id="db-navigator-3">
-              <v-toolbar-items>
-                <v-btn
-                  id="button-1"
-                >
-                  Button1
-                </v-btn>
-              </v-toolbar-items>
-            </v-toolbar>
-          </v-col>
-        </v-row>
-        <v-data-table
-          v-if="selectedTransport"
-          :headers="transportLinksHeaders"
-          :items="transportLinks"
-          :items-per-page="15"
-        >
-          <template v-slot:top>
-            <v-toolbar
-              light
-              flat
-            >
-              <v-toolbar-title>
-                {{ selectedTransport.transportType }}
-                №{{ selectedTransport.routeId}}
-              </v-toolbar-title>
-            </v-toolbar>
-          </template>
-          <template v-slot:item.actions="{ item }">
-            <v-btn
-              class="mr-2"
-              icon
-              text
-              :disabled="item.locationId === locationId"
-              @click="changeLocation(item.locationId)"
-            >
-              <v-icon
-                small
+      <v-row>
+        <v-col md="6">
+          <location-links
+            v-if="selectedTransport"
+            :title="`${selectedTransport.transportType} №${selectedTransport.routeId}`"
+            :links="transportLinks"
+            @addLink="addTransportLink"
+            @deleteLink="deleteTransportLink"
+            @input="onTransportChange"
+          />
+        </v-col>
+        <v-col md="6">
+          <transport
+            :transport="currentTransport || []"
+            @change="selectTransport"
+          />
+          <transport
+            :transport="transport || []"
+            @change="selectTransport"
+          />
+          <v-toolbar id="db-navigator-3">
+            <v-toolbar-items>
+              <v-btn
+                id="button-1"
               >
-                mdi-arrow-right
-              </v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-      </v-card>
+                Button1
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+        </v-col>
+      </v-row>
     </v-container>
   </v-card>
 </template>
@@ -90,6 +62,7 @@ import {
 @Component({
   components: {
     Transport: () => import('@/components/Transport.vue'),
+    LocationLinks: () => import('@/components/LocationLinks.vue'),
   },
 })
 class TransportDataComponent extends Vue {
@@ -119,6 +92,18 @@ class TransportDataComponent extends Vue {
 
   changeLocation(locationId: number) {
     this.$emit('changeLocation', locationId);
+  }
+
+  addTransportLink(link: Location) {
+    this.$emit('addTransportLink', link.locationId);
+  }
+
+  deleteTransportLink(link: Location) {
+    this.$emit('deleteTransportLink', link.locationId);
+  }
+
+  onTransportChange(value: Location) {
+    this.$emit('transportChange', value);
   }
 }
 export default TransportDataComponent;

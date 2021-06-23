@@ -12,10 +12,10 @@
 
     <v-card>
       <v-card-title>
-        <span class="headline">Удаление перехода</span>
+        <span class="headline">{{ title }}</span>
       </v-card-title>
       <v-card-text>
-        Вы действительно хотите удалить переход?
+        {{ text }}
       </v-card-text>
 
       <v-card-actions>
@@ -39,22 +39,33 @@
   </v-dialog>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+
+@Component({
   name: 'DeleteLink',
-  data: () => ({
-    show: false,
-  }),
-  methods: {
-    deleteLink() {
-      this.$emit('delete', this.item);
-      this.show = false;
-    },
-  },
-  props: [
-    'item',
-  ],
-};
+})
+class DeleteLink extends Vue {
+  @Prop({ type: String, default: 'Удаление перехода' })
+  title!: string;
+
+  @Prop({ type: String, default: 'Вы действительно хотите удалить переход?' })
+  text!: string;
+
+  @Prop({ type: Object })
+  item!: Record<string, any>;
+
+  show = false;
+
+  deleteLink() {
+    this.$emit('delete', this.item);
+    this.show = false;
+  }
+}
+
+export default DeleteLink;
 </script>
 
 <style scoped>

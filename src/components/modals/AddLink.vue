@@ -12,7 +12,7 @@
 
     <v-card>
       <v-card-title>
-        <span class="headline">Переход</span>
+        <span class="headline">{{title}}</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -47,11 +47,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-  mapActions,
   mapState,
 } from 'vuex';
 import Component from 'vue-class-component';
-import { Watch } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -62,12 +61,13 @@ import { Watch } from 'vue-property-decorator';
       'locations',
     ]),
   },
-  props: [
-    'defaultItem',
-  ],
 })
 class AddLink extends Vue {
-  defaultItem!: any;
+  @Prop({ type: String, default: 'Переход' })
+  title!: string;
+
+  @Prop({ type: Object })
+  defaultItem!: Record<string, any>;
 
   item: any = null;
 

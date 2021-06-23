@@ -5,6 +5,14 @@
       dark
     >
       {{ value ? value.locationName : 'Неизвестно' }}
+      <v-spacer />
+      <v-btn
+        v-if="!isEditing"
+        text
+        @click="edit"
+      >
+        Редактировать
+      </v-btn>
     </v-toolbar>
 
     <v-container
@@ -17,12 +25,11 @@
       />
     </v-container>
     <v-container v-else-if="value">
-      <v-card-title>
-        {{ value.locationName }}
-      </v-card-title>
-
       <v-row>
         <v-col>
+          <v-card-title>
+            {{ value.locationName }}
+          </v-card-title>
           <v-card-text v-html="value.description" />
         </v-col>
         <v-col>
@@ -38,16 +45,6 @@
           </v-container>
         </v-col>
       </v-row>
-
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          color="primary"
-          @click="edit"
-        >
-          Редактировать
-        </v-btn>
-      </v-card-actions>
     </v-container>
   </v-card>
 </template>

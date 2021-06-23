@@ -3,18 +3,18 @@
     <v-card>
       <v-container>
         <v-row>
-          <v-col md="4">
-            <location-lookup v-model="lookupLocationId" />
-          </v-col>
           <v-col>
-            <location
-              v-if="location"
-              v-model="locationModel"
-              @changeLocation="changeLocation"
-              @search="filterLocations"
-              @addLink="onAddLink"
-              @deleteLink="onDeleteLink"
-            />
+            <v-container>
+              <location-lookup v-model="lookupLocationId" />
+              <location
+                v-if="location"
+                v-model="locationModel"
+                @changeLocation="changeLocation"
+                @search="filterLocations"
+                @addLink="onAddLink"
+                @deleteLink="onDeleteLink"
+              />
+            </v-container>
           </v-col>
         </v-row>
         <v-row>

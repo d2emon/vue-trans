@@ -2,7 +2,7 @@
   <v-data-table
     :headers="linksHeaders"
     :items="links"
-    :items-per-page="5"
+    :items-per-page="itemsPerPage"
   >
     <template v-slot:top>
       <v-toolbar
@@ -10,10 +10,11 @@
         color="primary"
       >
         <v-toolbar-title>
-          Переходы
+          {{ title }}
         </v-toolbar-title>
         <v-spacer />
         <add-link-dialog
+          :title="addDialogTitle"
           :defaultItem="defaultLocation"
           @save="addLink"
         >
@@ -60,6 +61,8 @@
         </v-icon>
       </v-btn>
       <delete-link-dialog
+        :title="deleteDialogTitle"
+        :text="deleteDialogText"
         :item="item"
         @delete="deleteLink"
       >
@@ -105,8 +108,23 @@ interface DataHeader {
   },
 })
 class LocationLinks extends Vue {
+  @Prop({ type: String, default: 'Переходы' })
+  title!: string;
+
   @Prop({ type: Array })
   links!: Location[] | undefined;
+
+  @Prop({ type: Number, default: 15 })
+  itemsPerPage!: number;
+
+  @Prop({ type: String, default: 'Переход' })
+  addDialogTitle!: string;
+
+  @Prop({ type: String, default: 'Удаление перехода' })
+  deleteDialogTitle!: string;
+
+  @Prop({ type: String, default: 'Вы действительно хотите удалить переход?' })
+  deleteDialogText!: string;
 
   defaultLocation: Location = {
     locationId: 0,
